@@ -15,5 +15,5 @@ const environments = {
 	},
 };
 
-export const currentEnv = (process.env.NODE_ENV || "development") as TEnvironment;
+export const currentEnv = (process.env.ENV || "development") as TEnvironment;
 export const { API_BASE_URL } = environments[currentEnv];
