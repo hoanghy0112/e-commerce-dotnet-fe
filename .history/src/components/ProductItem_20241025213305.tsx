@@ -1,0 +1,53 @@
+import Image from "next/image";
+
+import DISCOUNT_TAG from "@/assets/icons/discount-tag.svg";
+import { currencyFormatter } from "@/utils/formatter";
+import Link from "next/link";
+
+type Props = {
+	product: IProduct;
+};
+
+export default function ProductItem({ product }: Props) {
+	const priceOffPercent = (
+		(1 - product.discount_price / product.price) *
+		100
+	).toFixed(0);
+
+	return (
+		<Link href={`/product/${product.id}`}></Link>
+		<div className=" w-[185px] relative duration-200 hover:shadow-lg">
+			<Image
+				src={product.image}
+				width={185}
+				height={200}
+				objectFit="cover"
+				alt="product preview"
+			/>
+			<Image
+				className=" absolute -left-1 top-0"
+				src={DISCOUNT_TAG}
+				width={50}
+				height={25}
+				alt="discount tag"
+			/>
+			<p className=" absolute top-[0.1rem] left-1 text-white text-[0.6rem]">
+				{priceOffPercent}% Off
+			</p>
+			<div className=" pt-2 flex flex-col gap-4">
+				<p className=" text-sm text-black-300"> {product.name} </p>
+				<div>
+					<div className=" flex gap-2">
+						<p className=" line-through text-[0.5rem] text-black-200">
+							{currencyFormatter.format(product.discount_price)}{" "}
+						</p>
+						<p className=" text-[0.5rem] text-danger">-{priceOffPercent}%</p>
+					</div>
+					<p className=" text-black-500 font-medium text-sm">
+						{currencyFormatter.format(product.price)}
+					</p>
+				</div>
+			</div>
+		</div>
+	);
+}
