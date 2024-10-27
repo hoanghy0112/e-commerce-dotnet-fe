@@ -20,6 +20,8 @@ type CheckBoxProps = {
 } & React.ComponentPropsWithRef<"div">;
 
 type CheckBoxGroupProps = {
+	selected?: string;
+	setSelected?: (value: string) => any;
 	children: ReactNode;
 } & React.ComponentPropsWithRef<"div">;
 
@@ -63,11 +65,14 @@ export function CheckBox({ title, name, className }: CheckBoxProps) {
 			<div
 				className={twMerge(
 					"  w-8 h-8 -right-4 absolute bg-black-500 rotate-45 duration-200",
-					isChecked ? ' -bottom-4' : ' -bottom-8'
+					isChecked ? " -bottom-4" : " -bottom-8"
 				)}
 			></div>
 			<Image
-				className={twMerge(" absolute right-0 duration-200", isChecked ? ' bottom-[2px]' : ' -bottom-1')}
+				className={twMerge(
+					" absolute right-0 duration-200",
+					isChecked ? " bottom-[2px]" : " -bottom-1"
+				)}
 				src={CHECK_ICON}
 				alt="check"
 			/>
@@ -78,10 +83,10 @@ export function CheckBox({ title, name, className }: CheckBoxProps) {
 export function CheckBoxGroup({
 	children,
 	className,
+	selected,
+	setSelected = () => {},
 	...props
 }: CheckBoxGroupProps) {
-	const [selected, setSelected] = useState<string>();
-
 	return (
 		<CheckBoxGroupContext.Provider value={{ selected, setSelected }}>
 			<div className={className} {...props}>
