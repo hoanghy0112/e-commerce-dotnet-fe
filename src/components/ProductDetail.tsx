@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { mockProductList } from '../services/api/product/product-similar';
 import { getProductDetailAPI } from "@/services/api/product/product-detail";
 import ProductItem from "./ProductItem";
+import { CheckBox, CheckBoxGroup } from "./CheckBox";
 
 
 
@@ -114,45 +115,41 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
             
             <div className="mt-4">
               <h2 className="text-lg font-semibold mb-2">Choose Option</h2>
-              <div className="flex gap-2">
+              <CheckBoxGroup selected={selectedOption || ""} setSelected={setSelectedOption} className="flex gap-2">
                 {product.storage.map((option: string) => (
-                  <button
+                  <CheckBox
                     key={option}
-                    className={`border px-4 py-2 rounded-lg ${
-                      selectedOption === option
-                        ? 'bg-black-100 text-black border-2 border-black-500'  
-                        : 'bg-white border-2 border-black-500 text-black hover:bg-gray-200'
-                    } focus:outline-none`}
-                    onClick={() => setSelectedOption(option)}
+                    title={option}
+                    name={option}
+                    className={`border px-4 py-2 rounded-lg  focus:outline-none`}
                   >
-                    {option}
-                  </button>
+                  </CheckBox>
                 ))}
-              </div>
+              </CheckBoxGroup>
             </div>
 
            
             <div className="mt-4">
               <h2 className="text-lg font-semibold mb-2">Choose Color</h2>
-              <div className="flex gap-2">
+              <CheckBoxGroup selected={selectedColor || ""} setSelected={setSelectedColor} className="flex gap-2">
                 {product.colors.map((color: string) => (
-                  <button
+                  <CheckBox
                     key={color}
-                    className={`flex items-center gap-2 border px-4 py-2 rounded-lg ${
-                      selectedColor === color
-                        ? 'bg-black-100 text-black border-2 border-black-500'  
-                        : 'bg-white border-2 border-black-500 text-black hover:bg-gray-200'
-                    } focus:outline-none`}
+                    className={`flex items-center gap-2 border px-4 py-2 rounded-lg focus:outline-none`}
+                    name={color}
+                    title={
+                      <>
+                        <span
+                          className="inline-block w-4 h-4 mr-2 rounded-full"
+                          style={{ backgroundColor: color }}
+                        ></span>
+                        <span>{color}</span>
+                      </>
+                    }
                     onClick={() => setSelectedColor(color)}
-                  >
-                    <span
-                      className="w-4 h-4 rounded-full"
-                      style={{ backgroundColor: color }}
-                    ></span>
-                    {color}
-                  </button>
+                  />
                 ))}
-              </div>
+              </CheckBoxGroup>
             </div>
 
           

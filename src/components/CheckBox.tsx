@@ -14,10 +14,13 @@ import { twMerge } from "tailwind-merge";
 import CHECK_ICON from "@/assets/icons/check.svg";
 import Image from "next/image";
 
-type CheckBoxProps = {
-	title: string;
+type CheckBoxProps = Omit<
+	React.ComponentPropsWithRef<"div">,
+	"title" | "name"
+> & {
+	title: ReactNode;
 	name: string;
-} & React.ComponentPropsWithRef<"div">;
+};
 
 type CheckBoxGroupProps = {
 	selected?: string;
@@ -61,7 +64,7 @@ export function CheckBox({ title, name, className }: CheckBoxProps) {
 			)}
 			onClick={handleCheck}
 		>
-			<Text className=" font-medium">{title}</Text>
+			<Text className=" font-medium flex items-center">{title}</Text>
 			<div
 				className={twMerge(
 					"  w-8 h-8 -right-4 absolute bg-black-500 rotate-45 duration-200",
