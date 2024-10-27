@@ -58,7 +58,7 @@ export function CheckBox({ title, name, className }: CheckBoxProps) {
 	return (
 		<button
 			className={twMerge(
-				"px-4 py-3 relative rounded-lg border-[1px] border-black-500 hover:bg-secondary-200 duration-200",
+				"px-4 py-3 relative rounded-lg border-[1px] border-black-500 bg-white hover:bg-secondary-200 duration-200",
 				" overflow-hidden",
 				className
 			)}
