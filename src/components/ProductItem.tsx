@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import DISCOUNT_TAG from "@/assets/icons/discount-tag.svg";
 import { currencyFormatter } from "@/utils/formatter";
+import Link from "next/link";
 
 type Props = {
 	product: IProduct;
@@ -33,7 +34,9 @@ export default function ProductItem({ product }: Props) {
 				{priceOffPercent}% Off
 			</p>
 			<div className=" pt-2 flex flex-col gap-4">
-				<p className=" text-lg text-black-300"> {product.name} </p>
+				<Link href={`/product/${product.id}`}>
+					<p className=" mt-2 text-lg text-black-300 hover:underline"> {product.name} </p>
+				</Link>
 				<div>
 					<div className=" flex gap-2">
 						<p className=" line-through text-sm text-black-200">

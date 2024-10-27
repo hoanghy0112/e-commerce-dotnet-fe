@@ -1,14 +1,18 @@
-'use client'
+"use client";
 
 import {
 	createContext,
 	ReactNode,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
 } from "react";
 import Text from "./Typography/Text";
 import { twMerge } from "tailwind-merge";
+
+import CHECK_ICON from "@/assets/icons/check.svg";
+import Image from "next/image";
 
 type CheckBoxProps = {
 	title: string;
@@ -42,14 +46,31 @@ export function CheckBox({ title, name, className }: CheckBoxProps) {
 		}
 	}, [isChecked, name, setSelected]);
 
+	const handleCheck = useCallback(() => {
+		setIsChecked((prev) => !prev);
+	}, [setIsChecked]);
+
 	return (
 		<button
 			className={twMerge(
-				"px-4 py-3 rounded-lg border-[1px] border-black-500 hover:bg-secondary-200 duration-200",
+				"px-4 py-3 relative rounded-lg border-[1px] border-black-500 hover:bg-secondary-200 duration-200",
+				" overflow-hidden",
 				className
 			)}
+			onClick={handleCheck}
 		>
 			<Text className=" font-medium">{title}</Text>
+			<div
+				className={twMerge(
+					"  w-8 h-8 -right-4 absolute bg-black-500 rotate-45 duration-200",
+					isChecked ? ' -bottom-4' : ' -bottom-8'
+				)}
+			></div>
+			<Image
+				className={twMerge(" absolute right-0 duration-200", isChecked ? ' bottom-[2px]' : ' -bottom-1')}
+				src={CHECK_ICON}
+				alt="check"
+			/>
 		</button>
 	);
 }
