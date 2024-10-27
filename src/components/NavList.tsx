@@ -20,7 +20,7 @@ export default function NavList() {
 							style={{
 								viewTransitionName: "nav-list",
 							}}
-							className="mx-1 h-1 rounded-sm bg-white"
+							className="mx-1 h-[3px] rounded-sm bg-white"
 						/>
 					) : null}
 				</Link>
