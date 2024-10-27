@@ -9,12 +9,12 @@ export default async function Page() {
 	return (
 		<div className=" px-24 pt-10">
 			<div>
-				<CheckBoxGroup>
+				<CheckBoxGroup className=" flex gap-5">
 					<CheckBox title="Price: Low to High" name="price-low-to-high" />
 					<CheckBox title="Price: High to Low" name="price-high-to-low" />
 				</CheckBoxGroup>
 			</div>
-			<div className=" grid grid-cols-6 gap-5">
+			<div className=" mt-10 grid grid-cols-6 gap-5">
 				{productList.map((product) => (
 					<ProductItem key={product.id} product={product} />
 				))}

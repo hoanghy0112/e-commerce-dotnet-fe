@@ -14,7 +14,7 @@ export default function ProductItem({ product }: Props) {
 	).toFixed(0);
 
 	return (
-		<div className=" w-[185px] relative duration-200 hover:shadow-lg">
+		<div className=" w-[185px] relative duration-200">
 			<Image
 				src={product.image}
 				width={185}
@@ -33,15 +33,15 @@ export default function ProductItem({ product }: Props) {
 				{priceOffPercent}% Off
 			</p>
 			<div className=" pt-2 flex flex-col gap-4">
-				<p className=" text-sm text-black-300"> {product.name} </p>
+				<p className=" text-lg text-black-300"> {product.name} </p>
 				<div>
 					<div className=" flex gap-2">
-						<p className=" line-through text-[0.5rem] text-black-200">
+						<p className=" line-through text-sm text-black-200">
 							{currencyFormatter.format(product.discount_price)}{" "}
 						</p>
-						<p className=" text-[0.5rem] text-danger">-{priceOffPercent}%</p>
+						<p className=" text-sm text-danger">-{priceOffPercent}%</p>
 					</div>
-					<p className=" text-black-500 font-medium text-sm">
+					<p className=" text-black-500 font-medium text-lg">
 						{currencyFormatter.format(product.price)}
 					</p>
 				</div>
