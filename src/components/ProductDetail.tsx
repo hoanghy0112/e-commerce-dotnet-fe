@@ -81,9 +81,11 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
             <p className="text-4xl font-bold text-black">
               {product.price.toLocaleString()} đ
             </p>
+            {product.discount_price && (
             <p className="line-through text-gray-500 text-lg">
               {product.discount_price.toLocaleString()} đ
             </p>
+            )}
           </div>
 
           <div className="flex space-x-1 mb-4">
