@@ -22,17 +22,45 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
   const fetchProductDetail = async (productId: string) => {
     const data = await getProductDetailAPI(productId);
     if (data) setProduct(data);
+    setDisplayPrice(data.discount_price ? data.discount_price : data.price);
   };
 
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
+  const [displayPrice, setDisplayPrice] = useState<number>(0);
 
   // Hàm tăng/giảm số lượng
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1);
   };
+
+  // Handle option change to change display price based on storage modifiers (price wise)
+  useEffect(() => {
+    if (selectedOption) {
+      const option = product.storage.find(
+        (item: string) => item === selectedOption
+      );
+
+      if (option) {
+        // Multiply with according storage index in storageModifier array
+        const price = product.discount_price
+          ? product.discount_price
+          : product.price;
+        setDisplayPrice(
+          price * product.storageModifiers[product.storage.indexOf(option)]
+        );
+        console.log("STORAGE: ", option);
+        console.log(
+          "Multipler: ",
+          product.storageModifiers[product.storage.indexOf(option)]
+        );
+
+        console.log("PRICE: ", displayPrice);
+      }
+    }
+  }, [selectedOption]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -79,12 +107,12 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
         <div className="w-full md:w-1/2 px-4">
           <div className="flex items-baseline space-x-2 mb-2">
             <p className="text-4xl font-bold text-black">
-              {product.price.toLocaleString()} đ
+              {displayPrice.toLocaleString()} đ
             </p>
             {product.discount_price && (
-            <p className="line-through text-gray-500 text-lg">
-              {product.discount_price.toLocaleString()} đ
-            </p>
+              <p className="line-through text-gray-500 text-lg">
+                {product.discount_price.toLocaleString()} đ
+              </p>
             )}
           </div>
 
@@ -227,7 +255,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
         <div className="p-6 rounded-lg shadow-md border border-gray-300">
           <div className="bg-gray-200 py-2 rounded-t-lg">
             <h2 className="text-3xl font-extrabold text-gray-800 text-center">
-              Product Details
+              Specifications
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-y-3">
