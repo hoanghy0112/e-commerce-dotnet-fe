@@ -5,6 +5,6 @@ export const API_URLS = {
 		getProductList: `${API_BASE_URL}/products`,
 	},
 	auth: {
-		register: `${API_BASE_URL}/register`,
+		getProductList: `${API_BASE_URL}/products`,
 	},
 };

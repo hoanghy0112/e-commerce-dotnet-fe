@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 
 import "./globals.css";
-import ClientLayout from "./layoutClient";
-
+import NavHeader from "@/components/NavHeader";
 
 export const metadata: Metadata = {
 	title: "E-Commerce app",

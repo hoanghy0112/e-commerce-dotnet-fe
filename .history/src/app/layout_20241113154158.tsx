@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 
 import "./globals.css";
-import ClientLayout from "./layoutClient";
-
+import NavHeader from "@/components/NavHeader";
 
 export const metadata: Metadata = {
 	title: "E-Commerce app",
@@ -16,17 +15,16 @@ const roboto = Roboto({
 	weight: ["100", "300", "400", "500", "700", "900"],
 });
 
-
 export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	
 	return (
 		<html lang="en" className={roboto.className}>
 			<body className=" bg-white">
-				<ClientLayout>{children}</ClientLayout> 
+				<<NavHeader />
+				<div>{children}</div>>
 			</body>
 		</html>
 	);
