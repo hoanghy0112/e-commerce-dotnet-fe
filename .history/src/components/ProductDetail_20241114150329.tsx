@@ -30,13 +30,13 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
   const [quantity, setQuantity] = useState<number>(1);
   const [displayPrice, setDisplayPrice] = useState<number>(0);
 
-  
+  // Hàm tăng/giảm số lượng
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1);
   };
 
-
+  // Handle option change to change display price based on storage modifiers (price wise)
   useEffect(() => {
     if (selectedOption) {
       const option = product.storage.find(

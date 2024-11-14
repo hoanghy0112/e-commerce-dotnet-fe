@@ -104,8 +104,8 @@ const RegisterPage: React.FC = () => {
                     onChange={handleChange}
                     required
                     placeholder="Nguyen Van A"
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd' }}
-                    
+             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px'}}
+             className='bordeẻ'
                 />
             </div>
             <div style={{ marginBottom: '1rem' }}>

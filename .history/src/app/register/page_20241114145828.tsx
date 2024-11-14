@@ -93,7 +93,7 @@ const RegisterPage: React.FC = () => {
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     }}>
         <h2 style={{ fontSize: '40px', marginBottom: '1.5rem', fontWeight: 'bold' }}>Sign up</h2>
-        <form onSubmit={handleSubmit} style={{ width: '55%' }}>
+        <form onSubmit={handleSubmit} style={{ width: '70%' }}>
             <div style={{ marginBottom: '1rem' }}>
                 <label htmlFor="name" style={{ fontWeight: 'bold', fontSize: '16px', display: 'block', marginBottom: '0.5rem' }}>Name</label>
                 <input
@@ -105,7 +105,6 @@ const RegisterPage: React.FC = () => {
                     required
                     placeholder="Nguyen Van A"
                     style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd' }}
-                    
                 />
             </div>
             <div style={{ marginBottom: '1rem' }}>

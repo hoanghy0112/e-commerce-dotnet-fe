@@ -29,7 +29,9 @@ const config: Config = {
 				danger: "#F04438",
 				warn: "#F79009",
 			},
-			
+			font: {
+				
+			}
 		},
 	},
 	plugins: [],

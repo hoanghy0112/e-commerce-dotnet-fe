@@ -55,24 +55,21 @@ const RegisterPage: React.FC = () => {
     display: 'flex',
     height: '100vh',
     backgroundImage: `url("/backgroundsignup.png")`,
-    backgroundSize: '100% 100%',
+    backgroundSize: 'cover',
      backgroundPosition: 'center',
-     margin: '20px',
-     borderRadius: '0 20px 20px 0',
-     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    margin: '2px',
 }}>
-    
+    {/* Left Section */}
     <div style={{
-        width: '35%', 
+        width: '35%', // Adjusted to match the design
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '0 0 0 20px',
-       padding: '2rem',
-        boxShadow: 'inset -10px 0px 10px -10px rgba(0,0,0,0.2)',
+        padding: '2rem',
     }}>
         <div style={{
-            width: '100%', 
+            width: '100%', // Full width for left background area
             height: '100%',
             backgroundImage: 'url("/path/to/left-image.png")',
             backgroundSize: 'cover',
@@ -80,22 +77,24 @@ const RegisterPage: React.FC = () => {
             borderRadius: '20px 0 0 20px',
         }}></div>
     </div>
-    
+
+    {/* Right Section (Form) */}
     <div style={{
-        width: '65%', 
+        width: '65%', // Adjusted to match the design
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '2rem',
         backgroundColor: '#ffffff',
-        borderRadius: '0 20px 20px 0', 
+        borderRadius: '0 20px 20px 0',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     }}>
-        <h2 style={{ fontSize: '40px', marginBottom: '1.5rem', fontWeight: 'bold' }}>Sign up</h2>
-        <form onSubmit={handleSubmit} style={{ width: '55%' }}>
+        <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', fontWeight: 'bold' }}>Sign up</h2>
+        <form onSubmit={handleSubmit} style={{ width: '80%' }}>
+            {/* Form Fields */}
             <div style={{ marginBottom: '1rem' }}>
-                <label htmlFor="name" style={{ fontWeight: 'bold', fontSize: '16px', display: 'block', marginBottom: '0.5rem' }}>Name</label>
+                <label htmlFor="name" style={{ fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>Name</label>
                 <input
                     type="text"
                     id="name"
@@ -105,11 +104,10 @@ const RegisterPage: React.FC = () => {
                     required
                     placeholder="Nguyen Van A"
                     style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd' }}
-                    
                 />
             </div>
             <div style={{ marginBottom: '1rem' }}>
-                <label htmlFor="email" style={{ fontWeight: 'bold', fontSize: '16px', display: 'block', marginBottom: '0.5rem' }}>Email</label>
+                <label htmlFor="email" style={{ fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>Email</label>
                 <input
                     type="email"
                     id="email"
@@ -122,7 +120,7 @@ const RegisterPage: React.FC = () => {
                 />
             </div>
             <div style={{ marginBottom: '1rem' }}>
-                <label htmlFor="password" style={{ fontWeight: 'bold', fontSize: '16px', display: 'block', marginBottom: '0.5rem' }}>Password</label>
+                <label htmlFor="password" style={{ fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>Password</label>
                 <input
                     type="password"
                     id="password"

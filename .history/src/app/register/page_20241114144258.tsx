@@ -58,10 +58,9 @@ const RegisterPage: React.FC = () => {
     backgroundSize: '100% 100%',
      backgroundPosition: 'center',
      margin: '20px',
-     borderRadius: '0 20px 20px 0',
-     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: '0 0 0 20px',
 }}>
-    
+    {/* Left Section */}
     <div style={{
         width: '35%', 
         display: 'flex',
@@ -92,10 +91,10 @@ const RegisterPage: React.FC = () => {
         borderRadius: '0 20px 20px 0', 
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     }}>
-        <h2 style={{ fontSize: '40px', marginBottom: '1.5rem', fontWeight: 'bold' }}>Sign up</h2>
-        <form onSubmit={handleSubmit} style={{ width: '55%' }}>
+        <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', fontWeight: 'bold' }}>Sign up</h2>
+        <form onSubmit={handleSubmit} style={{ width: '80%' }}>
             <div style={{ marginBottom: '1rem' }}>
-                <label htmlFor="name" style={{ fontWeight: 'bold', fontSize: '16px', display: 'block', marginBottom: '0.5rem' }}>Name</label>
+                <label htmlFor="name" style={{ fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>Name</label>
                 <input
                     type="text"
                     id="name"
@@ -105,11 +104,10 @@ const RegisterPage: React.FC = () => {
                     required
                     placeholder="Nguyen Van A"
                     style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd' }}
-                    
                 />
             </div>
             <div style={{ marginBottom: '1rem' }}>
-                <label htmlFor="email" style={{ fontWeight: 'bold', fontSize: '16px', display: 'block', marginBottom: '0.5rem' }}>Email</label>
+                <label htmlFor="email" style={{ fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>Email</label>
                 <input
                     type="email"
                     id="email"
@@ -122,7 +120,7 @@ const RegisterPage: React.FC = () => {
                 />
             </div>
             <div style={{ marginBottom: '1rem' }}>
-                <label htmlFor="password" style={{ fontWeight: 'bold', fontSize: '16px', display: 'block', marginBottom: '0.5rem' }}>Password</label>
+                <label htmlFor="password" style={{ fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>Password</label>
                 <input
                     type="password"
                     id="password"
