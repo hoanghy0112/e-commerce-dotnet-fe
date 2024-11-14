@@ -6,5 +6,6 @@ export const API_URLS = {
 	},
 	auth: {
 		register: `${API_BASE_URL}/register`,
+		signin: `${API_BASE_URL}/auth/login`,
 	},
 };

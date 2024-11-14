@@ -8,14 +8,14 @@ export default function ClientLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  
-  const showHeader = pathname !== "/register";
+	const pathname = usePathname();
 
-  return (
-    <div>
-      {showHeader && <NavHeader />}
-      {children}
-    </div>
-  );
+	const showHeader = pathname !== "/register" && pathname !== "/sign-in";
+
+	return (
+		<div>
+			{showHeader && <NavHeader />}
+			{children}
+		</div>
+	);
 }
