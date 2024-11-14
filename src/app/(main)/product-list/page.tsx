@@ -3,7 +3,6 @@ import ProductItem from "@/components/ProductItem";
 import Text from "@/components/Typography/Text";
 import { getProductListAPI } from "@/services/api/product/product-list";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function Page({
 	searchParams,
