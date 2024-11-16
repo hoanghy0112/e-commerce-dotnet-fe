@@ -52,7 +52,7 @@ const RegisterPage: React.FC = () => {
 
  return (
     <div className="flex h-screen bg-cover bg-left-center mx-5 my-5 rounded-lg shadow-md" style={{ backgroundImage: 'url(/backgroundsignup.png)' }}>
-    <div className="w-1/3 flex items-center justify-center rounded-bl-lg p-8 shadow-inner">
+    <div className="w-2/5 flex items-center justify-center rounded-bl-lg p-8 shadow-inner">
         
     </div>
     

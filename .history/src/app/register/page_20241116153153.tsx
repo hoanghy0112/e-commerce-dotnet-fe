@@ -56,7 +56,7 @@ const RegisterPage: React.FC = () => {
         
     </div>
     
-    <div className="w-2/3 flex flex-col justify-center items-center p-8 bg-white rounded-r-lg shadow-md">
+    <div className="w-3/5 flex flex-col justify-center items-center p-8 bg-white rounded-r-lg shadow-md">
         <h2 className="text-4xl font-bold mb-6">Sign up</h2>
         <form onSubmit={handleSubmit} className="w-3/5">
             <div className="mb-4 text-base ">

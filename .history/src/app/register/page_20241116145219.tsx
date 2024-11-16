@@ -98,19 +98,19 @@ const RegisterPage: React.FC = () => {
                     className="w-full p-3 font-normal rounded-lg border border-gray-300"
                 />
          </div>
-         <div className="text-sm font-medium mb-10">
-            <p>Have an account? <a href="/login" className="text-gray-400 text-decoration-line: underline font-bold">Sign in</a></p>
+         <div className="text-center text-sm">
+            <p>Have an account? <a href="/login" className="text-indigo-500 font-bold">Sign in</a></p>
         </div>
           <button type='submit' className='w-full p-3 text-2xl text-white bg-black-500 rounded-lg font-medium cursor-pointer mb-4'>Sign in</button>
         </form>
         
-         <div className="w-3/5 mb-10 mt-5 flex items-center justify-center">
-            <hr className='w-2/5 border-black'></hr>
-            <span className="px-2 text-sm font-normal text-gray-400">Or</span>
-            <hr className="w-2/5 border-gray-300" />
+        <div className="flex items-center justify-center my-4">
+            <hr className="w-2/5 border-none border-t border-gray-300" />
+            <span className="mx-4 text-gray-600">Or</span>
+            <hr className="w-2/5 border-none border-t border-gray-300" />
         </div>
-        <button className="w-3/5 p-3 text-2xl border border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-white font-medium">
-            <img src="/googleicon.png" alt="Google Icon" className="w-5 mr-2" />
+        <button className="w-full p-3 border border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-white font-bold">
+            <img src="/google-icon.png" alt="Google Icon" className="w-5 mr-2" />
             Sign in with Google
         </button>
     </div>

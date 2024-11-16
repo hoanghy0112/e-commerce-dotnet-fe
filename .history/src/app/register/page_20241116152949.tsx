@@ -56,7 +56,7 @@ const RegisterPage: React.FC = () => {
         
     </div>
     
-    <div className="w-2/3 flex flex-col justify-center items-center p-8 bg-white rounded-r-lg shadow-md">
+    <div className="w-3/5 flex flex-col justify-center items-center p-8 bg-white rounded-r-lg shadow-md">
         <h2 className="text-4xl font-bold mb-6">Sign up</h2>
         <form onSubmit={handleSubmit} className="w-3/5">
             <div className="mb-4 text-base ">
@@ -104,12 +104,12 @@ const RegisterPage: React.FC = () => {
           <button type='submit' className='w-full p-3 text-2xl text-white bg-black-500 rounded-lg font-medium cursor-pointer mb-4'>Sign in</button>
         </form>
         
-         <div className="w-3/5 mb-10 mt-5 flex items-center justify-center">
+         <div className="w-3/5 mb-10 t flex items-center justify-center">
             <hr className='w-2/5 border-black'></hr>
-            <span className="px-2 text-sm font-normal text-gray-400">Or</span>
+            <span className="px-2 text-gray-400">Or</span>
             <hr className="w-2/5 border-gray-300" />
         </div>
-        <button className="w-3/5 p-3 text-2xl border border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-white font-medium">
+        <button className="w-3/5 p-3 border border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-white font-bold">
             <img src="/googleicon.png" alt="Google Icon" className="w-5 mr-2" />
             Sign in with Google
         </button>

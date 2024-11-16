@@ -104,12 +104,12 @@ const RegisterPage: React.FC = () => {
           <button type='submit' className='w-full p-3 text-2xl text-white bg-black-500 rounded-lg font-medium cursor-pointer mb-4'>Sign in</button>
         </form>
         
-         <div className="w-3/5 mb-10 mt-5 flex items-center justify-center">
+         <div className="w-3/5 flex items-center justify-center">
             <hr className='w-2/5 border-black'></hr>
-            <span className="px-2 text-sm font-normal text-gray-400">Or</span>
+            <span className="px-2 text-gray-400">Or</span>
             <hr className="w-2/5 border-gray-300" />
         </div>
-        <button className="w-3/5 p-3 text-2xl border border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-white font-medium">
+        <button className="w-3/5 p-3 border border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-white font-bold">
             <img src="/googleicon.png" alt="Google Icon" className="w-5 mr-2" />
             Sign in with Google
         </button>
