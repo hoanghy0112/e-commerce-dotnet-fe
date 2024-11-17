@@ -19,22 +19,22 @@ export default async function Page({
 			<div className=" bg-secondary-200 rounded-md px-5 py-2 flex items-center">
 				<Text className=" mr-16 font-semibold">Sort by: </Text>
 				<CheckBoxGroup selected={sortType} className=" flex gap-5">
-					<Link href={`/product-list?sort=price-low-to-high`}>
+					<Link href={`/home/product-list?sort=price-low-to-high`}>
 						<CheckBox
 							title="Price: Low to High"
 							name="price-low-to-high"
 						/>
 					</Link>
-					<Link href={`/product-list?sort=price-high-to-low`}>
+					<Link href={`/home/product-list?sort=price-high-to-low`}>
 						<CheckBox
 							title="Price: High to Low"
 							name="price-high-to-low"
 						/>
 					</Link>
-					<Link href={`/product-list?sort=most-popular`}>
+					<Link href={`/home/product-list?sort=most-popular`}>
 						<CheckBox title="Most popular" name="most-popular" />
 					</Link>
-					<Link href={`/product-list?sort=newest-arrival`}>
+					<Link href={`/home/product-list?sort=newest-arrival`}>
 						<CheckBox title="Newest arrival" name="newest-arrival" />
 					</Link>
 				</CheckBoxGroup>
