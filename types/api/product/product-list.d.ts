@@ -21,5 +21,13 @@ declare type ProductListAPIResponse = {
 		availability: boolean;
 		storage: string[];
 		colors: string[];
+		release_date?: string | number;
+		categories?: {
+			id: number;
+			name: string;
+		}[];
+		is_bestseller?: boolean;
+		is_featured?: boolean;
+		is_new_arrival?: boolean;
 	}[];
 };
