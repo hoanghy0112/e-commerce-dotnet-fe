@@ -49,10 +49,10 @@ export default function NewArrivalProductItem({ product, className }: Props) {
 					</p>
 				</Link>
 				<div className=" flex flex-row items-end gap-4">
-					<p className=" text-black-500 font-medium text-xl">
+					<p className=" text-black-500 font-medium text-lg">
 						{currencyFormatter.format(product.price)}
 					</p>
-					<p className=" line-through text-lg text-black-200">
+					<p className=" line-through text-md text-black-200">
 						{currencyFormatter.format(product.discount_price)}{" "}
 					</p>
 				</div>

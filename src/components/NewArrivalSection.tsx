@@ -23,7 +23,7 @@ export default async function NewArrivalSection() {
 						Buy now <Image src={CHEVRON} alt="chevron" />
 					</p>
 				</PrimaryButton>
-				<div className=" w-1/3 flex flex-col gap-5">
+				<div className=" w-1/3 flex flex-col gap-10">
 					{products.slice(0, 2).map((product) => (
 						<NewArrivalProductItem key={product.id} product={product} />
 					))}
