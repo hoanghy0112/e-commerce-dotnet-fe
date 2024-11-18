@@ -4,12 +4,15 @@ import DISCOUNT_TAG from "@/assets/icons/discount-tag.svg";
 import { currencyFormatter } from "@/utils/formatter";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
+import PrimaryButton from "./PrimaryButton";
+
+import CART_ICON from "@/assets/icons/cart-white.svg";
 
 type Props = React.ComponentPropsWithoutRef<"div"> & {
 	product: IProduct;
 };
 
-export default function ProductItem({ product, className }: Props) {
+export default function NewArrivalProductItem({ product, className }: Props) {
 	const priceOffPercent = (
 		(1 - product.discount_price / product.price) *
 		100
@@ -18,7 +21,7 @@ export default function ProductItem({ product, className }: Props) {
 	return (
 		<div
 			className={twMerge(
-				" w-[185px] relative duration-200",
+				" w-[185px] flex gap-6 relative duration-200",
 				className
 			)}
 		>
@@ -39,24 +42,25 @@ export default function ProductItem({ product, className }: Props) {
 			<p className=" absolute top-[0.1rem] left-1 text-white text-[0.6rem]">
 				{priceOffPercent}% Off
 			</p>
-			<div className=" pt-2 flex flex-col gap-4">
+			<div className=" flex flex-col gap-4">
 				<Link href={`/product/${product.id}`}>
-					<p className=" mt-2 text-lg text-black-300 hover:underline">
-						{" "}
+					<p className=" mt-2 text-xl text-black-300 hover:underline">
 						{product.name}{" "}
 					</p>
 				</Link>
-				<div>
-					<div className=" flex gap-2">
-						<p className=" line-through text-sm text-black-200">
-							{currencyFormatter.format(product.discount_price)}{" "}
-						</p>
-						<p className=" text-sm text-danger">-{priceOffPercent}%</p>
-					</div>
+				<div className=" flex flex-row items-end gap-4">
 					<p className=" text-black-500 font-medium text-lg">
 						{currencyFormatter.format(product.price)}
 					</p>
+					<p className=" line-through text-md text-black-200">
+						{currencyFormatter.format(product.discount_price)}{" "}
+					</p>
 				</div>
+				<PrimaryButton className="mt-auto">
+					<p className=" w-full flex justify-center gap-2">
+						Add to cart <Image src={CART_ICON} alt="cart" />
+					</p>
+				</PrimaryButton>
 			</div>
 		</div>
 	);
