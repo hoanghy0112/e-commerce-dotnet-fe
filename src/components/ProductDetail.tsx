@@ -30,12 +30,10 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
   const [quantity, setQuantity] = useState<number>(1);
   const [displayPrice, setDisplayPrice] = useState<number>(0);
 
-  
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1);
   };
-
 
   useEffect(() => {
     if (selectedOption) {
@@ -44,7 +42,6 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
       );
 
       if (option) {
-        
         const price = product.discount_price
           ? product.discount_price
           : product.price;
@@ -88,7 +85,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
           <img
             src={product.images[currentIndex]}
             alt={`product-image-${currentIndex}`}
-            className="w-auto h-auto object-cover rounded-lg"
+            className=" rounded-lg object-contain h-full w-2/3"
           />
           <button
             onClick={handlePrev}
