@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/react-modal": "^3.16.3",
     "axios": "^1.7.7",
     "e-commerce": "file:",
     "next": "15.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-modal": "^3.16.1",
     "tailwind-merge": "^2.5.4",
     "zustand": "^5.0.0"
   },
