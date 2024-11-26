@@ -1,8 +1,9 @@
 declare type CredentialInput = {
-	username: string;
-	password: string;
+  username: string;
+  password: string;
 };
 
 declare type SignInAPIResponse = {
-	token: string;
+  token: string;
+  role: string;
 };

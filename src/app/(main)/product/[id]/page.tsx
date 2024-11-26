@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import ProductDetail from "@/components/ProductDetail";
 import { useParams } from "next/navigation";
@@ -7,11 +7,12 @@ import { getProductDetailAPI } from "@/services/api/product/product-detail";
 
 export default function ProductDetailPage() {
   const [product, setProduct] = useState<any>(null);
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   useEffect(() => {
+    console.log("Params: ", id);
     if (id) {
-      fetchProductDetail(id);
+      fetchProductDetail(id as string);
     }
   }, [id]);
 
@@ -22,7 +23,5 @@ export default function ProductDetailPage() {
 
   if (!product) return <p>Loading...</p>;
 
-  return <ProductDetail product={product} />;
+  return <ProductDetail productId={id as string} />;
 }
-
-

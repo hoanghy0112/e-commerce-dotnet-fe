@@ -7,13 +7,14 @@ import { mockProductList } from "../services/api/product/product-similar";
 import { getProductDetailAPI } from "@/services/api/product/product-detail";
 import ProductItem from "./ProductItem";
 import { CheckBox, CheckBoxGroup } from "./CheckBox";
+import StarRating from "./StarRating";
 
 interface ProductDetailProps {
   productId: string;
 }
 
 export default function ProductDetail({ productId }: ProductDetailProps) {
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<ProductDetailAPIResponse>(null);
 
   useEffect(() => {
     fetchProductDetail(productId);
@@ -23,13 +24,16 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
     const data = await getProductDetailAPI(productId);
     if (data) setProduct(data);
     setDisplayPrice(data.discount_price ? data.discount_price : data.price);
+    setSelectedColor(data.colors[0]);
+    setSelectedOption(data.storage[0]);
   };
 
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [displayPrice, setDisplayPrice] = useState<number>(0);
-
+  // Line-through price, if discount price is available
+  const [oldDisplayPrice, setOldDisplayPrice] = useState<number>(0);
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1);
@@ -45,8 +49,12 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
         const price = product.discount_price
           ? product.discount_price
           : product.price;
+        const oldPrice = product.price;
         setDisplayPrice(
           price * product.storageModifiers[product.storage.indexOf(option)]
+        );
+        setOldDisplayPrice(
+          oldPrice * product.storageModifiers[product.storage.indexOf(option)]
         );
         console.log("STORAGE: ", option);
         console.log(
@@ -71,6 +79,17 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
     setCurrentIndex((prevIndex) =>
       prevIndex === product.images.length - 1 ? 0 : prevIndex + 1
     );
+  };
+
+  const addToCart = () => {
+    // Set local storage. Only 1 item
+    const item = {
+      id: product.id,
+      quantity,
+    };
+
+    localStorage.setItem("cart", JSON.stringify([item]));
+    console.log("Added to cart: ", item);
   };
 
   if (!product) return <p>Loading...</p>;
@@ -106,35 +125,14 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
             <p className="text-4xl font-bold text-black">
               {displayPrice.toLocaleString()} đ
             </p>
-            {product.discount_price && (
-              <p className="line-through text-gray-500 text-lg">
-                {product.discount_price.toLocaleString()} đ
+            {product.discount_price > 0.0 && (
+              <p className="text-lg text-gray-500 line-through">
+                {oldDisplayPrice.toLocaleString()} đ
               </p>
             )}
           </div>
 
-          <div className="flex space-x-1 mb-4">
-            {Array(5)
-              .fill(2)
-              .map((_, i) => (
-                <svg
-                  key={i}
-                  className="w-5 h-5 text-black-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 2l3 7h7l-5.6 4.4 2.4 7L12 16l-5.8 4 2.4-7L3 9h7l3-7z"
-                  />
-                </svg>
-              ))}
-          </div>
-
+          <StarRating rating={product.rating} />
           <div className="mt-4">
             <h2 className="text-lg font-semibold mb-2">Choose Option</h2>
             <CheckBoxGroup
@@ -197,7 +195,10 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
               </button>
             </div>
 
-            <button className="text-white bg-black-500 px-6 py-2 rounded-lg flex items-center justify-center w-full md:w-auto hover:bg-black-400">
+            <button
+              className="text-white bg-black-500 px-6 py-2 rounded-lg flex items-center justify-center w-full md:w-auto hover:bg-black-400"
+              onClick={addToCart}
+            >
               Add to cart <br />
               <svg
                 color="white"
