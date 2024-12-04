@@ -1,11 +1,10 @@
 export async function getProductDetailAPI(productId: string) {
   // Mock data cho chi tiết sản phẩm
-  // const url = "http://localhost:5100/api/products/" + "2";
-  // const response = await fetch(url);
-  // const data = await response.json();
-  // console.log(data);
-  // return data;
-  return mockData;
+  const url = "http://localhost:5100/api/products/" + productId;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+  // return mockData;
 }
 const mockData = {
   id: 2,

@@ -8,6 +8,7 @@ interface CartViewProps {
   storageOption: string;
   setStorageOption: (storage: string) => void;
   onNext: () => void;
+  loadingProduct: boolean;
 }
 interface ProductDetails {
   id: number;
@@ -27,6 +28,7 @@ function CartView({
   storageOption,
   setStorageOption,
   onNext,
+  loadingProduct,
 }: CartViewProps) {
   return (
     <div>
@@ -91,12 +93,14 @@ function CartView({
           </div>
         </div>
       ) : (
-        <p>Loading product details...</p>
+        (loadingProduct && <p>Loading...</p>) || (
+          <p>There is no product to display</p>
+        )
       )}
     </div>
   );
 }
-// Used to display a card that show image on the left. Then on the right top down: name , price, rating. Encompassed in a card with proper border and padding
+// Used to display a card that show image on the left. Then on the right top down: name , price, rating.
 const ProductCardDetails = ({ product }: { product: ProductDetails }) => {
   return (
     <div className="flex border p-4 rounded-lg">

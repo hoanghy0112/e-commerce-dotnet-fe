@@ -8,6 +8,12 @@ import PaymentForm from "./Cart/PaymentForm";
 import CartView from "./Cart/CartProductView";
 import CustomerForm from "./Cart/CustomerForm";
 import useAuthStore from "@/stores/auth.store";
+import placeOrder from "@/services/api/order/placeOrder";
+import getPromoCodeValue from "@/services/api/order/getPromoValue";
+import canUsePromoCode from "@/services/api/order/canUsePromoCode";
+import SuccessOrderView from "./Cart/SuccessOrderView";
+import Confetti from "react-confetti";
+
 // Define the prop types for the CartModal component
 interface CartModalProps {
   isOpen: boolean;
@@ -15,30 +21,20 @@ interface CartModalProps {
 }
 
 // Define the types for different steps of the checkout process
-type StepType = 1 | 2 | 3 | 4;
+type StepType = 1 | 2 | 3 | 4 | 5;
 
 interface CartModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface ProductDetails {
-  id: number;
-  name: string;
-  price: number;
-  discount_price: number;
-  colors: string[];
-  storage: string[];
-  storageModifiers: number[];
-  rating: number;
-  images: string[];
-}
-
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
+  const [showConfetti, setShowConfetti] = useState<boolean>(false);
+
   const [step, setStep] = useState<StepType>(1);
-  const [productDetails, setProductDetails] = useState<ProductDetails | null>(
-    null
-  );
+  const [productDetails, setProductDetails] =
+    useState<CartProductDetails | null>(null);
+  const [loadingProduct, setLoadingProduct] = useState<boolean>(false);
   // Customer details state
   const [customerDetails, setCustomerDetails] = useState<CustomerDetails>({
     name: "",
@@ -50,12 +46,22 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const [colorOption, setColorOption] = useState<string>("");
   const [storageOption, setStorageOption] = useState<string>("");
   const [promoCode, setPromoCode] = useState<string>("");
-
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const [discountPercentage, setDiscountPercentage] = useState<number>(0); // From 0 -> 1
+  const [promoCodeNotif, setPromoCodeNotif] = useState<string>("");
   // Shipping and address states
-  const [shippingAddress, setShippingAddress] = useState<Address | null>(null);
-  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(
-    null
-  );
+  const [shippingAddress, setShippingAddress] = useState<Address>({
+    province: "",
+    district: "",
+    address: "",
+  });
+
+  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    cardHolder: "",
+  });
   // Payment method and info state
   const [paymentMethod, setPaymentMethod] = useState<string>("CreditCard");
   const [shippingMethod, setShippingMethod] = useState<string>("Standard");
@@ -137,6 +143,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
     }
     return true;
   };
+  // Calculate total on storage change based on price modifier
   useEffect(() => {
     const updateTotalOnStorageOption = async () => {
       const storageSelected = productDetails?.storage.find(
@@ -144,11 +151,16 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       );
       const storageIndex = productDetails?.storage.indexOf(storageSelected);
       const storageModifier = productDetails?.storageModifiers[storageIndex];
+      const promoPercentage = discountPercentage / 100;
+      console.log("Promo percentage: ", promoPercentage);
       const subTotal = productDetails?.price * storageModifier;
+
       const taxRate = await fetch("http://localhost:5100/api/order/tax-rate")
         .then((res) => res.json())
         .then((data) => data.taxRate);
-      const tax = subTotal * taxRate;
+      // Note to take into account if promo is none.
+      const tax = subTotal * taxRate * (1 - promoPercentage);
+
       const total = subTotal + tax + shipping;
       setSubtotal(subTotal);
       setTax(tax);
@@ -162,6 +174,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       const cart = localStorage.getItem("cart");
       if (cart) {
         const cartItems = JSON.parse(cart);
+        setLoadingProduct(true);
         const taxRate = await fetch("http://localhost:5100/api/order/tax-rate")
           .then((res) => res.json())
           .then((data) => data.taxRate);
@@ -171,63 +184,107 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
         const storageSelected = res.storage.find(
           (storage) => storage === storageOption
         );
-        const storageIndex = res.storage.indexOf(storageSelected);
+        if (!storageSelected) {
+          setStorageOption(res.storage[0]);
+        }
+        const storageIndex = res.storage.indexOf(storageSelected || 0);
         const storageModifier = res.storageModifiers[storageIndex];
-        const subTotal = res.price * storageModifier;
-        const tax = subTotal * taxRate;
-        const total = subTotal + tax + shipping;
-        setTax(tax);
+        // Actual value, with or without promo code
+        const actualPrice = res.discount_price || res.price;
+        const subTotal = actualPrice * storageModifier;
+        const tax = subTotal * taxRate * (1 - discountPercentage / 100);
+        const discountAmountFromCode = subTotal * (discountPercentage / 100);
 
+        const total = subTotal + tax + shipping - discountAmountFromCode;
+        setTax(tax);
+        // For display purpose only
+        setDiscountAmount(discountAmountFromCode);
         setProductDetails(res);
         setSubtotal(subTotal);
         setTotal(total);
+      } else {
+        setProductDetails(null);
+        setSubtotal(0);
+        setTotal(0);
+        setTax(0);
+        setShipping(0);
       }
+      setLoadingProduct(false);
     };
     if (isOpen) fetchCart();
   }, [isOpen, shipping, tax]);
 
-  const handleCheckout = () => {
-    const authToken = useAuthStore.getState().token;
+  // Handle promo code change to update total and related
+  // Will return a X percentage. This apply to subtotal
+  // Also change tax, tax is based on sub total.
+  useEffect(() => {
+    const fetchPromoValue = async () => {
+      if (!promoCode) {
+        setPromoCodeError("");
+        setPromoCodeNotif("");
+        setDiscountPercentage(0);
+        setDiscountAmount(0);
+        setTax(subtotal * 0.1);
+        setTotal(subtotal + tax + shipping);
+        return;
+      }
+      const res = await getPromoCodeValue(promoCode);
+      const canUse = await canUsePromoCode(promoCode);
+      if (res === 0 || !canUse) {
+        setPromoCodeError("Invalid promo code.");
+        setPromoCodeNotif("");
+        setDiscountPercentage(0);
+        setDiscountAmount(0);
+        setTax(subtotal * 0.1);
+        setTotal(subtotal + tax + shipping);
+      } else {
+        setPromoCodeError("");
+        setPromoCodeNotif("Promo code applied: " + res + "% discount.");
+        setDiscountPercentage(res);
+        const discount = subtotal * (res / 100);
+        const newTax = (subtotal - discount) * 0.1;
+        const newTotal = subtotal - discount + newTax + shipping;
+        setDiscountPercentage(res);
+        setDiscountAmount(discount);
+        setTax(newTax);
+        setTotal(newTotal);
+      }
+    };
+    fetchPromoValue();
+  }, [promoCode]);
+
+  const handleCheckout = async () => {
     if (!isStepValid()) {
       console.log("Invalid step");
       return;
     }
-    // Todo: Handle customer id if logged in
-    const orderGeneral = {
-      province: shippingAddress?.province || "",
-      district: shippingAddress?.district || "",
-      address: shippingAddress?.address || "",
-      phoneNumber: customerDetails.phoneNumber,
-      paymentMethod,
-      shippingMethod,
-      cardHolder: paymentDetails?.cardHolder || "",
-      cardNumber: paymentDetails?.cardNumber || "",
-      cardExpiry: paymentDetails?.expiryDate || "",
-      cardCvv: paymentDetails?.cvv || "",
-      customerName: customerDetails.name,
-    };
-    const modifierIndex = productDetails?.storage.indexOf(storageOption);
-    const orderDetails = {
-      productId: productDetails?.id || 0,
-      quantity: 1,
-      color: colorOption,
-      storage: storageOption,
-      storageModifier: productDetails?.storageModifiers[modifierIndex || 0],
-    };
-
-    const order = { ...orderGeneral, orderDetails: [orderDetails] };
-    console.log("Orders", JSON.stringify(order));
-    // Sending:
-    console.log("Auth token", authToken);
-    const res = fetch("http://localhost:5100/api/order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(order),
+    if (productDetails === null) {
+      console.log("Product details not found");
+      return;
+    }
+    // Order param beware!!
+    const res = await placeOrder({
+      shippingAddress: shippingAddress,
+      customerDetails: customerDetails,
+      paymentDetails: paymentDetails,
+      paymentMethod: paymentMethod,
+      productDetails: productDetails,
+      colorOption: colorOption,
+      storageOption: storageOption,
+      shippingMethod: shippingMethod,
+      PromoCodeApplied: promoCode,
     });
-    console.log("Order placed", res);
+
+    if (res.error) {
+      setValidationError(res.error);
+      return;
+    }
+
+    setStep(5);
+    setShowConfetti(true);
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 2000);
     // onClose();
   };
 
@@ -239,6 +296,8 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       className="fixed right-0 top-0 w-2/5 h-full bg-gray-50 shadow-lg overflow-auto rounded-md"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50"
     >
+      {showConfetti && <Confetti />}
+
       <motion.div
         initial={{ x: "100%" }}
         animate={{ x: isOpen ? 0 : "100%" }}
@@ -265,6 +324,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 storageOption={storageOption}
                 setStorageOption={setStorageOption}
                 onNext={nextStep}
+                loadingProduct={loadingProduct}
               />
             )}
             {step === 2 && (
@@ -296,10 +356,10 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 setPaymentMethod={setPaymentMethod}
               />
             )}
+            {step === 5 && <SuccessOrderView />}
           </div>
 
           <div className="w-2/5 ml-8 p-4 bg-gray-100 rounded shadow-lg">
-            <h3 className="text-xl font-semibold mb-4">Summary</h3>
             <div className="flex justify-between mb-2">
               <span>Subtotal:</span>
               <span>{subtotal.toLocaleString()}₫</span>
@@ -312,6 +372,14 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
               <span>Tax:</span>
               <span>{tax.toLocaleString()}₫</span>
             </div>
+
+            {discountAmount > 0 && (
+              <div className="flex justify-between items-center mb-2 text-green-600">
+                <span>Discount ({discountPercentage}%):</span>
+                <span>- {discountAmount.toLocaleString()}₫</span>
+              </div>
+            )}
+
             <div className="flex justify-between mb-4 text-xl font-bold">
               <span>Total:</span>
               <span>{total.toLocaleString()}₫</span>
@@ -319,24 +387,34 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
             {step === 1 && (
               <>
                 <div className="mb-4">
-                  <input
-                    type="text"
-                    placeholder="Promo Code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  {promoCodeError && (
-                    <p className="text-red-500">{promoCodeError}</p>
-                  )}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Enter Promo Code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="w-full p-3 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    />
+                    {promoCodeError && (
+                      <p className="mt-2 bg-red-100 text-red-600 text-sm p-2 rounded-md">
+                        {promoCodeError}
+                      </p>
+                    )}
+                    {promoCodeNotif && (
+                      <p className="mt-2 bg-green-100 text-green-600 text-sm p-2 rounded-md">
+                        {promoCodeNotif}
+                      </p>
+                    )}
+                  </div>
                 </div>
-
-                <button
-                  onClick={nextStep}
-                  className=" text-white px-4 py-2 w-full rounded bg-black-500 hover:bg-black-600"
-                >
-                  Proceed to Checkout
-                </button>
+                {productDetails && (
+                  <button
+                    onClick={nextStep}
+                    className="text-white px-4 py-3 w-full rounded bg-black-500 hover:bg-black-600 transition-all duration-300"
+                  >
+                    Proceed to Checkout
+                  </button>
+                )}
               </>
             )}
           </div>

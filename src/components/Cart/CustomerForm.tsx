@@ -65,18 +65,20 @@ function CustomerForm({
       />
 
       {/* Next and Back Buttons */}
-      <button
-        onClick={handleNext}
-        className="bg-black-500 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
-      >
-        Next
-      </button>
-      <button
-        onClick={onBack}
-        className="mt-4 text-gray-500 underline hover:text-gray-700 ml-2 focus:outline-none"
-      >
-        Back
-      </button>
+      <div className="flex justify-between items-center">
+        <button
+          onClick={handleNext}
+          className="bg-black-500 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+        >
+          Next
+        </button>
+        <button
+          onClick={onBack}
+          className="mt-4 text-gray-500 underline hover:text-gray-700 ml-2 focus:outline-none"
+        >
+          Back
+        </button>
+      </div>
     </div>
   );
 }
