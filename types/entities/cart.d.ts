@@ -15,3 +15,14 @@ declare interface CustomerDetails {
   email: string;
   phoneNumber: string;
 }
+declare interface CartProductDetails {
+  id: number;
+  name: string;
+  price: number;
+  discount_price: number;
+  colors: string[];
+  storage: string[];
+  storageModifiers: number[];
+  rating: number;
+  images: string[];
+}

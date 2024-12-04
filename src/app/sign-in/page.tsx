@@ -14,18 +14,23 @@ import { useCallback, useState } from "react";
 export default function Page() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loginError, setLoginError] = useState<string | null>(null);
   const { setToken } = useAuthStore();
 
   const router = useRouter();
 
   const handleSignIn = useCallback(async () => {
-    const { role } = await signInAPI({ username, password });
-    if (role === "Admin") {
-      router.replace("/admin/dashboard");
-      return;
-    } else if (role === "User") {
-      router.replace("/home");
+    try {
+      const { role } = await signInAPI({ username, password });
+      if (role === "Admin") {
+        router.replace("/admin/dashboard");
+        return;
+      } else if (role === "User") {
+        router.replace("/home");
+      }
+    } catch (error) {
+      console.error(error);
+      setLoginError("Invalid username or password");
     }
   }, [username, password, setToken, router]);
 
@@ -41,6 +46,11 @@ export default function Page() {
       <div className=" absolute top-0 left-0 w-2/3 h-screen bg-white grid place-items-center">
         <div className=" w-96 flex flex-col items-center">
           <H1 className=" font-bold">Sign in</H1>
+          {loginError && (
+            <div className=" bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-4 w-full">
+              <p className=" text-red-500 text-sm">{loginError}</p>
+            </div>
+          )}
           <InputField
             value={username}
             onChange={(e) => setUsername(e.target.value)}
