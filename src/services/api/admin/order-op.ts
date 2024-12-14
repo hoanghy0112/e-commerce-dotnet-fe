@@ -16,7 +16,7 @@ export const getOrdersAdmin = async ({
   page = 1,
   limit = 10,
 }: OrderAdminParams = {}) => {
-  // <- ensure you provide a default empty object here
+  // Provide default empty object in function parameter
   const token = useAuthStore?.getState()?.token;
 
   if (!token) {
@@ -24,6 +24,9 @@ export const getOrdersAdmin = async ({
       "Token is missing. Please ensure the user is authenticated."
     );
   }
+
+  let total = 0;
+  let orders = [];
 
   const res = await fetch(
     API_URLS.admin.getOrders +
@@ -38,8 +41,20 @@ export const getOrdersAdmin = async ({
     }
   );
 
-  if (!res.ok) throw new Error("Failed to get orders");
-  return await res.json();
+  if (!res.ok) {
+    throw new Error(`Failed to fetch orders. Status: ${res.status}`);
+  }
+
+  // Extract the "X-Total-Count" header and assign to total
+  const totalCountHeader = res.headers.get("X-Total-Count");
+  if (totalCountHeader) {
+    total = parseInt(totalCountHeader, 10);
+  }
+
+  // Parse the response body as JSON
+  orders = await res.json();
+
+  return { total, orders };
 };
 
 export const processOrder = async (orderId: number) => {
