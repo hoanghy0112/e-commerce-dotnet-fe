@@ -10,7 +10,7 @@ export default function PopularBrandSection() {
         {BRAND_LOGOS.map(({ name, key, image }) => (
           <a
             key={key}
-            href={`/home/product-list?category=${key}`}
+            href={`/phones?category=${name}`}
             className={twMerge(
               " w-48 h-24 grid place-items-center rounded-lg bg-neutral-100 hover:bg-neutral-200",
               "duration-200"

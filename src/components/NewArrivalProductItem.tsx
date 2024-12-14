@@ -1,67 +1,103 @@
-import Image from "next/image";
+"use client";
 
+import Image from "next/image";
 import DISCOUNT_TAG from "@/assets/icons/discount-tag.svg";
 import { currencyFormatter } from "@/utils/formatter";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import PrimaryButton from "./PrimaryButton";
-
+import { toast } from "react-toastify";
 import CART_ICON from "@/assets/icons/cart-white.svg";
-
+import StarRating from "./StarRating";
+import AddToCartAPI from "@/services/api/addToCart";
 type Props = React.ComponentPropsWithoutRef<"div"> & {
-	product: IProduct;
+  product: IProduct;
 };
 
 export default function NewArrivalProductItem({ product, className }: Props) {
-	const priceOffPercent = (
-		(1 - product.discount_price / product.price) *
-		100
-	).toFixed(0);
+  const priceOffPercent = (
+    (1 - product.discount_price / product.price) *
+    100
+  ).toFixed(0);
+  const notify = () => toast.success("Product added to cart!");
+  return (
+    <div
+      className={twMerge(
+        "w-full flex gap-4 items-start p-4 bg-gray-100 rounded-lg shadow-md relative duration-200",
+        className
+      )}
+    >
+      {/* Left: Product Image */}
+      <div className="relative w-[140px] h-[200px] bg-white rounded overflow-hidden flex items-center justify-center p-4">
+        <Image
+          src={product.image}
+          width={140}
+          height={160}
+          className="object-contain"
+          alt="product preview"
+        />
+        {priceOffPercent !== "0" && priceOffPercent !== "100" && (
+          <>
+            <Image
+              className="absolute -left-2 top-0"
+              src={DISCOUNT_TAG}
+              width={40}
+              height={20}
+              alt="discount tag"
+            />
+            <p className="absolute top-[0.2rem] left-2 text-white text-[0.6rem]">
+              {priceOffPercent}% Off
+            </p>
+          </>
+        )}
+      </div>
 
-	return (
-		<div
-			className={twMerge(
-				" w-[185px] flex gap-6 relative duration-200",
-				className
-			)}
-		>
-			<Image
-				src={product.image}
-				width={185}
-				height={200}
-				objectFit="cover"
-				alt="product preview"
-			/>
-			<Image
-				className=" absolute -left-1 top-0"
-				src={DISCOUNT_TAG}
-				width={50}
-				height={25}
-				alt="discount tag"
-			/>
-			<p className=" absolute top-[0.1rem] left-1 text-white text-[0.6rem]">
-				{priceOffPercent}% Off
-			</p>
-			<div className=" flex flex-col gap-4">
-				<Link href={`/product/${product.id}`}>
-					<p className=" mt-2 text-xl text-black-300 hover:underline">
-						{product.name}{" "}
-					</p>
-				</Link>
-				<div className=" flex flex-row items-end gap-4">
-					<p className=" text-black-500 font-medium text-lg">
-						{currencyFormatter.format(product.price)}
-					</p>
-					<p className=" line-through text-md text-black-200">
-						{currencyFormatter.format(product.discount_price)}{" "}
-					</p>
-				</div>
-				<PrimaryButton className="mt-auto">
-					<p className=" w-full flex justify-center gap-2">
-						Add to cart <Image src={CART_ICON} alt="cart" />
-					</p>
-				</PrimaryButton>
-			</div>
-		</div>
-	);
+      {/* Right: Product Details */}
+      <div className="flex-1 flex flex-col justify-between">
+        {/* Product Name */}
+        <Link href={`/product/${product.id}`}>
+          <p className="text-lg text-black-500 font-medium hover:underline">
+            {product.name}
+          </p>
+        </Link>
+
+        {/* Rating */}
+        <div className="flex items-center text-gray-400 text-sm mt-2">
+          <StarRating rating={product.rating} />
+        </div>
+
+        {/* Price Section */}
+        <div className="mt-2">
+          {product.discount_price !== null && product.discount_price !== 0 ? (
+            <>
+              <div className="flex items-baseline gap-2">
+                <p className="text-black-500 font-medium text-lg">
+                  {currencyFormatter.format(product.discount_price)}
+                </p>
+                <p className="line-through text-gray-400 text-sm">
+                  {currencyFormatter.format(product.price)}
+                </p>
+              </div>
+            </>
+          ) : (
+            <p className="text-black-500 font-medium text-lg">
+              {currencyFormatter.format(product.price)}
+            </p>
+          )}
+        </div>
+
+        {/* Add to Cart Button */}
+        <PrimaryButton
+          className="mt-4 w-[140px] h-[40px] flex items-center justify-center gap-2"
+          onClick={() => {
+            AddToCartAPI(product.id.toString(), 1);
+            notify();
+          }}
+        >
+          Add to cart{" "}
+          <Image src={CART_ICON} alt="cart" width={16} height={16} />
+        </PrimaryButton>
+      </div>
+    </div>
+  );
 }

@@ -3,22 +3,76 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { useState, useEffect } from "react";
-import { mockProductList } from "../services/api/product/product-similar";
 import { getProductDetailAPI } from "@/services/api/product/product-detail";
 import ProductItem from "./ProductItem";
 import { CheckBox, CheckBoxGroup } from "./CheckBox";
 import StarRating from "./StarRating";
-
+import { toast } from "react-toastify";
+import { getSimilarProducts } from "@/services/api/product/getSimilar";
+import {
+  createReview,
+  updateReview,
+  getProductReviews,
+  deleteReview,
+} from "@/services/api/product/review-op";
 interface ProductDetailProps {
   productId: string;
 }
 
+import { isLoggedIn } from "@/services/api/auth/getCurrentUserInfo";
+
 export default function ProductDetail({ productId }: ProductDetailProps) {
   const [product, setProduct] = useState<ProductDetailAPIResponse>(null);
-
+  const [reviews, setReviews] = useState<IReview[]>([]);
+  const [newReview, setNewReview] = useState<IReview>({} as IReview);
+  const [isUserLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+  const notify = () => toast.success("Product added to cart!");
   useEffect(() => {
+    fetchReviews(productId);
+    isLoggedIn().then((data) => setIsLoggedIn(data));
+
     fetchProductDetail(productId);
+    getSimilarProducts(productId).then((data) => setSimilarProducts(data));
+    // Check if user is logged in
   }, []);
+  // Reviews stuffs
+  const fetchReviews = async (productId: string) => {
+    const data = await getProductReviews(productId);
+    setReviews(data);
+  };
+
+  const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewReview((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleReviewSubmit = async () => {
+    if (!newReview.content) {
+      toast.error("Please provide a review content!");
+      return;
+    }
+    const reviewData = {
+      ProductId: parseInt(productId),
+      Rating: newReview.rating,
+      Content: newReview.content,
+    };
+    try {
+      await createReview(
+        reviewData.ProductId.toString(),
+        reviewData.Content,
+        reviewData.Rating
+      );
+      toast.success("Review submitted successfully!");
+      setNewReview({} as IReview);
+      fetchReviews(productId); // Refresh the reviews
+    } catch (error) {
+      toast.error("You have already reviewed this product!");
+    }
+  };
 
   const fetchProductDetail = async (productId: string) => {
     const data = await getProductDetailAPI(productId);
@@ -89,7 +143,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
     };
 
     localStorage.setItem("cart", JSON.stringify([item]));
-    console.log("Added to cart: ", item);
+    notify();
   };
 
   if (!product) return <p>Loading...</p>;
@@ -99,8 +153,9 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
       <nav className="text-sm text-gray-500 mb-4">
         Home {">"} Iphone {">"} Iphone 15 Series {">"} {product.name}
       </nav>
+      <h1 className="text-4xl font-bold text-black-500 mb-4">{product.name}</h1>
       <div className="flex flex-wrap md:flex-nowrap md:space-x-6">
-        <div className="relative w-full h-96 flex items-center justify-center">
+        <div className="relative w-full h-96 flex items-center justify-center border-black-100 border-solid border-opacity-70 border-2">
           <img
             src={product.images[currentIndex]}
             alt={`product-image-${currentIndex}`}
@@ -228,26 +283,9 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
               Product Details
             </h2>
           </div>
-          <p className="text-gray-700 mb-4">{product.description}</p>
-          <div className="flex justify-center mt-auto">
-            <button className="flex items-center gap-2 border-2 border-gray-800 px-10 py-2 rounded-full bg-white hover:bg-gray-800 hover:text-white text-gray-800 mt-4 font-medium transition-colors duration-200">
-              <span>View detailed</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-          </div>
+          <p className="text-gray-700 mb-4 leading-loose">
+            {product.description}
+          </p>
         </div>
 
         <div className="p-6 rounded-lg shadow-md border border-gray-300">
@@ -256,44 +294,97 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
               Specifications
             </h2>
           </div>
-          <div className="grid grid-cols-1 gap-y-3">
+          <div className="grid grid-cols-1 gap-y-3 ">
             {/* Specs is object key-pair value  */}
             {Object.entries(product.specifications).map(([key, value]) => (
-              <div key={key} className="flex">
+              <div key={key} className="flex mt-2">
                 <span className="font-semibold text-gray-800 w-1/3">{key}</span>
                 <span className="text-gray-700 w-2/3">{value}</span>
               </div>
             ))}
           </div>
-          <div className="flex justify-center mt-4">
-            <button className="flex items-center border-2 border-gray-800 gap-2 px-10 py-2 rounded-full bg-white hover:bg-gray-800 hover:text-white text-gray-800 transition-colors duration-200 font-medium">
-              <span>View detailed</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
+      {/* Reviews Section */}
+      <div className="mt-10">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">Reviews</h2>
 
+        {isUserLoggedIn ? (
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
+            <div className="bg-gray-200 py-2 rounded-t-lg">
+              <h2 className="text-3xl font-extrabold text-gray-800 text-center">
+                Submit a Review
+              </h2>
+            </div>
+            <div className="mt-4">
+              <div className="mb-4">
+                <label className="font-semibold text-gray-700">Rating</label>
+                <select
+                  name="rating"
+                  value={newReview.rating}
+                  onChange={handleReviewChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                >
+                  {[1, 2, 3, 4, 5].map((rating) => (
+                    <option key={rating} value={rating}>
+                      {rating} Star{rating > 1 && "s"}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="font-semibold text-gray-700">Review</label>
+                <textarea
+                  name="content"
+                  value={newReview.content}
+                  onChange={handleReviewChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  rows={4}
+                  placeholder="Write your review here..."
+                />
+              </div>
+              <button
+                onClick={handleReviewSubmit}
+                className="text-white bg-black-500 px-6 py-2 rounded-lg hover:bg-black-400"
+              >
+                Submit Review
+              </button>
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
+          <div className="bg-gray-200 py-2 rounded-t-lg">
+            <h2 className="text-3xl font-extrabold text-gray-800 text-center">
+              Reviews
+            </h2>
+          </div>
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
+              <div key={review.id} className="mt-4">
+                <div className="flex justify-between">
+                  <span className="font-semibold">{review.username}</span>
+                  <StarRating rating={review.rating} />
+                </div>
+                <p className="text-gray-700 mt-2">{review.content}</p>
+                <p className="text-gray-500 text-sm">
+                  {new Date(review.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>No reviews yet. Be the first to review this product!</p>
+          )}
+        </div>
+      </div>
       <div className="mt-10">
         <h2 className="text-2xl font-bold mb-4 text-gray-800">
           Similar Products
         </h2>
         <div className=" grid grid-cols-6 gap-5">
-          {mockProductList.map((item) => (
-            <ProductItem key={item.id} product={item} />
+          {similarProducts.map((product) => (
+            <ProductItem key={product.id} product={product} />
           ))}
         </div>
       </div>

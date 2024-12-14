@@ -3,21 +3,19 @@ import Image from "next/image";
 import Section from "./Section";
 import NewArrivalProductItem from "./NewArrivalProductItem";
 import PrimaryButton from "./PrimaryButton";
-
 import NEW_ARRIVAL from "@/assets/introductions/new-arrival.png";
 import CHEVRON from "@/assets/icons/chevron-right-white.svg";
-
 export default async function NewArrivalSection() {
-  const { products } = await getNewArrivalsAPI();
-
+  const { products } = await getNewArrivalsAPI().then((res) => res);
   return (
-    <Section title="New Arrivals" url="/home/new-arrivals">
+    <Section title="New Arrivals" url="/phones?sort=new-arrivals-only">
       <div className=" relative flex gap-10">
         <Image
-          className=" w-2/3 rounded-md object-fill"
+          className=" w-2/3 rounded-md object-contain"
           src={NEW_ARRIVAL}
           alt="New arrival introduction"
         />
+
         <PrimaryButton className=" absolute w-36 bottom-10 left-10">
           <p className=" w-full pl-3 flex justify-center gap-2">
             Buy now <Image src={CHEVRON} alt="chevron" />

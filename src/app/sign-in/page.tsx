@@ -29,7 +29,7 @@ export default function Page() {
         router.replace("/home");
       }
     } catch (error) {
-      console.error(error);
+      console.log("Failed to sign in:", error);
       setLoginError("Invalid username or password");
     }
   }, [username, password, setToken, router]);

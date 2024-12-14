@@ -73,7 +73,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const [shipping, setShipping] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
-
+  const [yourTrackingID, setYourTrackingID] = useState<string>("");
   const nextStep = () => {
     if (!isStepValid()) return;
     setValidationError("");
@@ -274,7 +274,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       shippingMethod: shippingMethod,
       PromoCodeApplied: promoCode,
     });
-
+    setYourTrackingID(res.trackingID);
     if (res.error) {
       setValidationError(res.error);
       return;
@@ -356,7 +356,9 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 setPaymentMethod={setPaymentMethod}
               />
             )}
-            {step === 5 && <SuccessOrderView />}
+            {step === 5 && (
+              <SuccessOrderView trackingID={yourTrackingID.toString()} />
+            )}
           </div>
 
           <div className="w-2/5 ml-8 p-4 bg-gray-100 rounded shadow-lg">
