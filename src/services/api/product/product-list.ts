@@ -11,14 +11,28 @@ const DEFAULT_PRODUCT_LIST_API_OPTIONS: ProductListAPIOptions = {
   storage: undefined,
   sort: undefined,
   page: undefined,
-  limit: 20,
+  altReq: undefined,
+  limit: 18,
+};
+const DEFAULT_CATEGORY_API_OPTIONS: CategoryAPIOptions = {
+  name: undefined,
 };
 
 export async function getProductListAPI(
   options: ProductListAPIOptions = DEFAULT_PRODUCT_LIST_API_OPTIONS
 ): Promise<ProductListAPIResponse> {
   if (currentEnv === "mock") return getProductListAPIMock();
-
+  switch (options.altReq) {
+    case "best_deals":
+      return getBestDealsAPI();
+    case "best_sellers":
+      return getBestSellerAPI();
+    case "new_arrivals":
+      return getNewArrivalsAPI();
+    default:
+      break;
+  }
+  console.log("sort: ", options.sort);
   const response = await axios.get(`${API_URLS.product.getProductList}`, {
     params: options,
   });
@@ -50,13 +64,29 @@ export async function getNewArrivalsAPI(): Promise<ProductListAPIResponse> {
   return { products: response.data };
 }
 
-export async function getCategoriesAPI(): Promise<CategoryAPIResponse> {
+export async function getCategoriesAPI(
+  options: CategoryAPIOptions = DEFAULT_CATEGORY_API_OPTIONS
+): Promise<CategoryAPIResponse> {
   if (currentEnv === "mock") return getCategoriesAPIMock();
 
-  const response = await axios.get(`${API_URLS.product.getCategories}`);
+  const response = await axios.get(`${API_URLS.product.getCategories}`, {
+    params: options,
+  });
+  console.log("response: ", response.data);
+  return response.data;
+}
+
+export async function getCategoryUsingNameAPI(
+  name: string
+): Promise<ICategoryDTO> {
+  if (name === "" || name === undefined) return { id: -1, name: "" };
+  const response = await axios.get(
+    `${API_URLS.product.getCategoryWithName.replace("categoryName", name)}`
+  );
 
   return response.data;
 }
+
 function getCategoriesAPIMock(): CategoryAPIResponse {
   return {
     categories: Array(Math.floor(Math.random() * 10 + 5))
