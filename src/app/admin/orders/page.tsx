@@ -7,15 +7,19 @@ import {
   cancelOrder,
 } from "@/services/api/admin/order-op";
 import { useEffect, useState } from "react";
-
+import Pagination from "@/components/Pagination";
 export default function Orders() {
   const [orders, setOrders] = useState<OrderAdmin[]>([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalPage, setTotalPage] = useState(0);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const data = await getOrdersAdmin();
-        setOrders(data);
+        setOrders(data.orders);
+        setTotalPage(Math.ceil(data.total / limit));
       } catch (error) {
         console.error("Failed to fetch orders:", error);
       }
@@ -23,6 +27,27 @@ export default function Orders() {
     fetchOrders();
   }, []);
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const data = await getOrdersAdmin({
+          page,
+          limit,
+        });
+        const total = data.total;
+        const listOrders = data.orders;
+        setOrders(listOrders);
+        setTotalPage(Math.ceil(total / limit));
+      } catch (error) {
+        console.error("Failed to fetch orders:", error);
+      }
+    };
+    fetchOrders();
+  }, [page, limit]);
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setPage(1); // Reset page to 1 when limit changes
+  };
   const handleAction = async (orderId: number, action: string) => {
     try {
       switch (action) {
@@ -38,8 +63,8 @@ export default function Orders() {
         default:
           break;
       }
-      const data = await getOrdersAdmin();
-      setOrders(data);
+      const data = await getOrdersAdmin({ page, limit });
+      setOrders(data.orders);
     } catch (error) {
       console.error("Failed to process order:", error);
     }
@@ -141,6 +166,15 @@ export default function Orders() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="mt-4 align-bottom">
+        <Pagination
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={(page) => setPage(page)}
+          onItemsPerPageChange={handleLimitChange}
+          itemsPerPage={limit}
+        />
       </div>
     </div>
   );
