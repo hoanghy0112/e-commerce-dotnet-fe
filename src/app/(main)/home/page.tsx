@@ -5,13 +5,13 @@ import NewArrivalSection from "@/components/NewArrivalSection";
 import PopularBrandSection from "@/components/PopularBrandSection";
 
 export default function Page() {
-	return (
-		<div className=" flex flex-col gap-12 px-24 py-10">
-			<HomeCover />
-			<PopularBrandSection />
-			<BestDealSection />
-			<NewArrivalSection />
-			<BestSellerSection />
-		</div>
-	);
+  return (
+    <div className=" flex flex-col gap-12 px-24 py-10">
+      <HomeCover />
+      <PopularBrandSection />
+      <BestDealSection />
+      <NewArrivalSection />
+      <BestSellerSection />
+    </div>
+  );
 }
