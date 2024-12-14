@@ -7,6 +7,7 @@ declare type ProductListAPIOptions = {
   storage?: string;
   sort?: string;
   page?: number;
+  altReq?: string;
   limit?: number;
 };
 
@@ -31,4 +32,8 @@ declare type ProductListAPIResponse = {
     is_featured?: boolean;
     is_new_arrival?: boolean;
   }[];
+};
+
+declare type CategoryAPIOptions = {
+  name?: string;
 };

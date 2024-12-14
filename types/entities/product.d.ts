@@ -14,6 +14,9 @@ declare interface IProduct {
 declare interface ICategoryDTO {
   id: number;
   name: string;
+  isBanner?: boolean;
+  image?: string;
+  description?: string;
 }
 
 declare interface IAdminProduct {
