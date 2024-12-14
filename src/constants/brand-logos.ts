@@ -11,61 +11,76 @@ import LG_LOGO from "@/assets/brand-logos/lg.png";
 import REALME_LOGO from "@/assets/brand-logos/realme.png";
 
 const BRAND_LOGOS = [
-	{
-		name: "IPhone",
-		key: "iphone",
-		image: IPHONE_LOGO,
-	},
-	{
-		name: "Xiaomi",
-		key: "xiaomi",
-		image: XIAOMI_LOGO,
-	},
-	{
-		name: "Samsung",
-		key: "samsung",
-		image: SAMSUNG_LOGO,
-	},
-	{
-		name: "Oppo",
-		key: "oppo",
-		image: OPPO_LOGO,
-	},
-	{
-		name: "Vivo",
-		key: "vivo",
-		image: VIVO_LOGO,
-	},
-	{
-		name: "Huawei",
-		key: "huawei",
-		image: HUAWEI_LOGO,
-	},
-	{
-		name: "Oneplus",
-		key: "oneplus",
-		image: ONEPLUS_LOGO,
-	},
-	{
-		name: "Nokia",
-		key: "nokia",
-		image: NOKIA_LOGO,
-	},
-	{
-		name: "Honor",
-		key: "honor",
-		image: HONOR_LOGO,
-	},
-	{
-		name: "LG",
-		key: "lg",
-		image: LG_LOGO,
-	},
-	{
-		name: "Realme",
-		key: "realme",
-		image: REALME_LOGO,
-	},
+  {
+    name: "apple",
+    key: "apple",
+    image: IPHONE_LOGO,
+  },
+  {
+    name: "Xiaomi",
+    key: "xiaomi",
+    image: XIAOMI_LOGO,
+  },
+  {
+    name: "Samsung",
+    key: "samsung",
+    image: SAMSUNG_LOGO,
+  },
+  {
+    name: "Oppo",
+    key: "oppo",
+    image: OPPO_LOGO,
+  },
+  {
+    name: "Vivo",
+    key: "vivo",
+    image: VIVO_LOGO,
+  },
+  {
+    name: "Huawei",
+    key: "huawei",
+    image: HUAWEI_LOGO,
+  },
+  {
+    name: "Oneplus",
+    key: "oneplus",
+    image: ONEPLUS_LOGO,
+  },
+  {
+    name: "Nokia",
+    key: "nokia",
+    image: NOKIA_LOGO,
+  },
+  {
+    name: "Honor",
+    key: "honor",
+    image: HONOR_LOGO,
+  },
+  {
+    name: "LG",
+    key: "lg",
+    image: LG_LOGO,
+  },
+  {
+    name: "Realme",
+    key: "realme",
+    image: REALME_LOGO,
+  },
+  {
+    name: "apple",
+    key: "apple1",
+    image: IPHONE_LOGO,
+  },
+  {
+    name: "Xiaomi",
+    key: "xiaomi1",
+    image: XIAOMI_LOGO,
+  },
+  {
+    name: "Samsung",
+    key: "samsung1",
+    image: SAMSUNG_LOGO,
+  },
 ];
 
 export default BRAND_LOGOS;

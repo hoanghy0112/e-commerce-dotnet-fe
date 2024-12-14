@@ -15,8 +15,5 @@ export const NAV_HEADERS = [
 		title: "Track Orders",
 		path: "/track-orders",
 	},
-	{
-		title: "News & Reviews",
-		path: "/news-and-reviews",
-	},
+	
 ];
