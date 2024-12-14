@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
     //Cloudinary
     domains: ["res.cloudinary.com"],
   },
+  warnings: {
+    // Disable duplicate key warning
+    react: {
+      deprecation: true,
+    },
+  },
 };
 
 export default nextConfig;
