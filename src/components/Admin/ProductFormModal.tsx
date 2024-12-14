@@ -346,7 +346,7 @@ export default function ProductFormModal({
               <button
                 type="button"
                 onClick={addColor}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="bg-black-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 Add Color
               </button>
@@ -384,7 +384,7 @@ export default function ProductFormModal({
               </div>
               <div className="mt-4">
                 <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  className="bg-black-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                   onClick={handleAddCategory}
                 >
                   Add Category
@@ -504,7 +504,7 @@ export default function ProductFormModal({
               <button
                 type="button"
                 onClick={addSpecification}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="bg-black-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 Add Specification
               </button>
@@ -535,7 +535,7 @@ export default function ProductFormModal({
               <button
                 type="button"
                 onClick={addImage}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="bg-black-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 Add Image
               </button>
@@ -595,7 +595,7 @@ export default function ProductFormModal({
               <button
                 type="button"
                 onClick={addStorageOption}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="bg-black-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 Add Storage
               </button>
@@ -664,7 +664,7 @@ export default function ProductFormModal({
               </button>
               <button
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="bg-black-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 {product ? "Save Changes" : "Create Product"}
               </button>

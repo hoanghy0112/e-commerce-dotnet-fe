@@ -5,7 +5,8 @@ import { useRouter, usePathname } from "next/navigation"; // Use `usePathname`
 import useAuthStore from "@/stores/auth.store";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import Image from "next/image";
+import LOGOUT_ICON from "@/assets/icons/log-out-04.svg";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname(); // Get current path
@@ -44,9 +45,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const getBreadcrumb = () => {
     const pathSegments = pathname.split("/").filter(Boolean); // Use `pathname`
-    // default is admin/dashboard
-    // Display Dashboard/
-    // If path is admin/products, display Dashboard / Products
 
     return (
       <div className="text-sm text-gray-500">
@@ -76,12 +74,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {getBreadcrumb()}
           <button
             onClick={() => {
-              useAuthStore.setState({ token: null, role: null });
+              useAuthStore.getState().setToken("");
+              useAuthStore.getState().setRole("");
               router.replace("/sign-in");
             }}
             className="flex items-center gap-2 text-red-500"
           >
-            <span>Logout</span>
+            <span>
+              <Image src={LOGOUT_ICON} alt="Logout" width={16} height={16} />
+            </span>
+            Logout
           </button>
         </div>
         {children}
